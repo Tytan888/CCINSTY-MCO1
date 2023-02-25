@@ -1,5 +1,4 @@
 
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.PriorityQueue;
@@ -7,13 +6,13 @@ import java.util.Scanner;
 
 public class Model {
 
-	Tile maze[][];
-	int[] goal;
-	int[] start;
-	Scanner scan;
-	int size;
-	boolean first;
-	PriorityQueue<Tile> frontier;
+	private Tile maze[][];
+	private int[] goal;
+	private int[] start;
+	private Scanner scan;
+	private int size;
+	private boolean first;
+	private PriorityQueue<Tile> frontier;
 
 	public Model() throws FileNotFoundException {
 		// method call for file accessing get the N first
@@ -38,8 +37,7 @@ public class Model {
 
 		String temp;
 		temp = scan.nextLine();
-		System.out.println(temp);
-		this.size = Character.getNumericValue(temp.charAt(0));
+		this.size = Integer.parseInt(temp);
 		maze = new Tile[size][size];
 		while (scan.hasNextLine()) {
 			temp = scan.nextLine();
@@ -83,10 +81,9 @@ public class Model {
 	}
 
 	public void printMaze() {
-		// System.out.prin(goal[0]+" "+goal[1]);t
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
-				System.out.print(maze[i][j].heuristic + " ");
+				System.out.print(maze[i][j].getHeuristic() + " ");
 			}
 			System.out.print("\n");
 		}
@@ -96,7 +93,7 @@ public class Model {
 
 		if (row < 0 || row >= size || col >= size || col < 0) {
 			return false;
-		} else if (this.maze[row][col].type == Tile.WALL) {
+		} else if (this.maze[row][col].getType() == Tile.WALL) {
 			return false;
 		}
 
@@ -114,11 +111,11 @@ public class Model {
 			frontier.add(maze[start[0]][start[1]]);
 			maze[start[0]][start[1]].setStatus(Tile.FRONTIER);
 			maze[start[0]][start[1]].setCost(0);
-			maze[start[0]][start[1]].setPriority(0 + maze[start[0]][start[1]].getHeuristic());
+			maze[start[0]][start[1]].setPriority(maze[start[0]][start[1]].getHeuristic());
 			first = false;
 		}
 
-		Tile temp = frontier.remove();
+		Tile temp = frontier.poll();
 
 		int[] tempCoord = new int[2];
 		tempCoord[0] = temp.getCoordinate()[0];
@@ -132,15 +129,15 @@ public class Model {
 				if ((i != 0 && j == 0) || (i == 0 && j != 0)) {
 					if (isValidCoordinate(tempCoord[0] + i, tempCoord[1] + j)) {
 						if (maze[tempCoord[0] + i][tempCoord[1] + j].getStatus() == Tile.UNEXPLORED) {
-							frontier.add(maze[tempCoord[0] + i][tempCoord[1] + j]);
 							maze[tempCoord[0] + i][tempCoord[1] + j].setParent(temp);
 							maze[tempCoord[0] + i][tempCoord[1] + j].setStatus(Tile.FRONTIER);
 							maze[tempCoord[0] + i][tempCoord[1] + j].setCost(temp.getCost() + 1);
 							maze[tempCoord[0] + i][tempCoord[1] + j]
 									.setPriority(maze[tempCoord[0] + i][tempCoord[1] + j].getCost()
 											+ maze[tempCoord[0] + i][tempCoord[1] + j].getHeuristic());
+							frontier.add(maze[tempCoord[0] + i][tempCoord[1] + j]);
 						} else if (maze[tempCoord[0] + i][tempCoord[1] + j].getStatus() == Tile.FRONTIER) {
-							if (maze[tempCoord[0] + i][tempCoord[1] + j].cost > temp.cost + 1) {
+							if (maze[tempCoord[0] + i][tempCoord[1] + j].getCost() > temp.getCost() + 1) {
 								maze[tempCoord[0] + i][tempCoord[1] + j].setParent(temp);
 								maze[tempCoord[0] + i][tempCoord[1] + j].setCost(temp.getCost() + 1);
 								maze[tempCoord[0] + i][tempCoord[1] + j]
@@ -154,23 +151,28 @@ public class Model {
 		}
 
 		return null;
-
 	}
 
-	public static void main(String args[]) throws FileNotFoundException {
-		Model model = new Model();
-		model.printMaze();
-		Tile goal = null;
-		do {
-			goal = model.Astar();
-
-		} while (goal == null && !model.getFrontier().isEmpty());
-
-		while (goal.getParent() != null) {
-
-			System.out.println(goal.getCoordinate()[0] + " " + goal.getCoordinate()[1]);
-			goal = goal.getParent();
-		}
-
+	public int getSize() {
+		return this.size;
 	}
+
+	public int[] getGoals() {
+		return goal;
+	}
+
+	/*
+	 * public static void main(String args[]) throws FileNotFoundException {
+	 * Model model = new Model();
+	 * model.printMaze();
+	 * Tile goal = null;
+	 * do {
+	 * goal = model.Astar();
+	 * } while (goal == null && !model.getFrontier().isEmpty());
+	 * 
+	 * while (goal.getParent() != null) {
+	 * System.out.println(goal.getCoordinate()[0] + " " + goal.getCoordinate()[1]);
+	 * }
+	 * }
+	 */
 }

@@ -1,11 +1,8 @@
-import java.util.ArrayList;
+
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import java.awt.Color;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -13,10 +10,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
 
-public class MazeView {
+public class View {
 
     private JFrame mainFrame;
     private int n;
@@ -27,7 +22,7 @@ public class MazeView {
 
     private JButton theButton;
 
-    public MazeView(int n, ActionListener startListener) {
+    public View(int n, ActionListener startListener) {
 
         this.n = n;
 
@@ -79,10 +74,43 @@ public class MazeView {
         this.mainFrame.setVisible(true);
     }
 
-    public void updateTiles(/* TODO ADD TILES */) {
+    public void updateTile(int row, int col, int TILE_STATE, int SEARCH_STATE) {
+        switch (TILE_STATE) {
+            case Tile.WALL:
+                this.tilePanels[row][col].setBackground(Color.black);
+                break;
+            case Tile.GOAL:
+                this.tilePanels[row][col].setBackground(Color.ORANGE);
+                break;
+            case Tile.START:
+                this.tilePanels[row][col].setBackground(Color.BLUE);
+                break;
+            case Tile.FREE:
+                switch (SEARCH_STATE) {
+                    case Tile.UNEXPLORED:
+                        this.tilePanels[row][col].setBackground(Color.WHITE);
+                        break;
+                    case Tile.FRONTIER:
+                        this.tilePanels[row][col].setBackground(Color.YELLOW);
+                        break;
+                    case Tile.EXPLORED:
+                        this.tilePanels[row][col].setBackground(new Color(156, 81, 182));
+                        break;
+                }
+                break;
+        }
+    }
+
+    public void succeedTile(int row, int col) {
+        this.tilePanels[row][col].setBackground(Color.green);
+    }
+
+    public void failTiles() {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                // TODO: Add changing colors
+                if (this.tilePanels[i][j].getBackground().equals(new Color(156, 81, 182))) {
+                    this.tilePanels[i][j].setBackground(Color.red);
+                }
             }
         }
     }
