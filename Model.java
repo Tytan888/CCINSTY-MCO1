@@ -13,6 +13,7 @@ public class Model {
 	private int size;
 	private boolean first;
 	private PriorityQueue<Tile> frontier;
+	private int count;
 
 	public Model() throws FileNotFoundException {
 		// method call for file accessing get the N first
@@ -23,6 +24,7 @@ public class Model {
 		first = true;
 		goal = new int[2];
 		generateMaze();
+		this.count = 0;
 	}
 
 	public void generateMaze() throws FileNotFoundException {
@@ -105,7 +107,6 @@ public class Model {
 	}
 
 	public Tile Astar() {
-
 		if (first) {
 			maze[start[0]][start[1]].setParent(null);
 			frontier.add(maze[start[0]][start[1]]);
@@ -116,7 +117,7 @@ public class Model {
 		}
 
 		Tile temp = frontier.poll();
-
+		this.count++;
 		int[] tempCoord = new int[2];
 		tempCoord[0] = temp.getCoordinate()[0];
 		tempCoord[1] = temp.getCoordinate()[1];
@@ -159,6 +160,10 @@ public class Model {
 
 	public int[] getGoals() {
 		return goal;
+	}
+
+	public int getCount(){
+		return this.count;
 	}
 
 	/*

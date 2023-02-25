@@ -61,7 +61,7 @@ public class Controller {
                     String endMsg = "Exit";
                     if (tempGoal == null) {
                         view.failTiles();
-                        endMsg = "Failed...";
+                        endMsg = "(" + model.getCount() + ") Failed...";
                     } else {
                         successTimer = new Timer(DELAY, new ActionListener() {
                             @Override
@@ -82,7 +82,7 @@ public class Controller {
                         });
                         successTimer.setRepeats(true);
                         successTimer.start();
-                        endMsg = "Success!";
+                        endMsg = "(" + model.getCount() + ") Success!";
                     }
                     view.updateButton(endMsg, new ActionListener() {
                         @Override
