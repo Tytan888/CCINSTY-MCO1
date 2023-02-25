@@ -28,7 +28,7 @@ public class Model {
 	}
 
 	public void generateMaze() throws FileNotFoundException {
-		File file = new File("maze.txt");
+		File file = new File("maze2.txt");
 		int lineCount = 0;
 
 		try {
@@ -139,11 +139,13 @@ public class Model {
 							frontier.add(maze[tempCoord[0] + i][tempCoord[1] + j]);
 						} else if (maze[tempCoord[0] + i][tempCoord[1] + j].getStatus() == Tile.FRONTIER) {
 							if (maze[tempCoord[0] + i][tempCoord[1] + j].getCost() > temp.getCost() + 1) {
+								frontier.remove(maze[tempCoord[0] + i][tempCoord[1] + j]);
 								maze[tempCoord[0] + i][tempCoord[1] + j].setParent(temp);
 								maze[tempCoord[0] + i][tempCoord[1] + j].setCost(temp.getCost() + 1);
 								maze[tempCoord[0] + i][tempCoord[1] + j]
 										.setPriority(maze[tempCoord[0] + i][tempCoord[1] + j].getCost()
 												+ maze[tempCoord[0] + i][tempCoord[1] + j].getHeuristic());
+								frontier.add(maze[tempCoord[0] + i][tempCoord[1] + j]);
 							}
 						}
 					}
