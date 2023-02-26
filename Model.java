@@ -28,7 +28,7 @@ public class Model {
 	}
 
 	public void generateMaze() throws FileNotFoundException {
-		File file = new File("maze2.txt");
+		File file = new File("maze.txt");
 		int lineCount = 0;
 
 		try {
