@@ -26,7 +26,7 @@ public class View {
 
         this.n = n;
 
-        this.mainFrame = new JFrame("迷路ボット");
+        this.mainFrame = new JFrame("Mazefinder 2000");
         this.mainFrame.setSize(750, 800);
         this.mainFrame.setUndecorated(false);
         this.mainFrame.setResizable(false);
