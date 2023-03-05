@@ -6,7 +6,7 @@ import java.awt.event.ActionEvent;
 
 public class Controller {
 
-    private final int DELAY = 1;
+    private final int DELAY = 50;
 
     private View view;
     private Model model;
