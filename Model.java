@@ -14,7 +14,9 @@ public class Model {
 	private boolean first;
 	private PriorityQueue<Tile> frontier;
 	private int count;
-
+	/*
+ 	* Constructor for model initializes the priority queues and arrays needed for A*
+ 	*/
 	public Model() throws FileNotFoundException {
 		// method call for file accessing get the N first
 		// in method call do board = new Tile[N][N]
@@ -26,6 +28,11 @@ public class Model {
 		generateMaze();
 		this.count = 0;
 	}
+	/*
+	 * This method takes in a file called maze.txt and searches through its contents.
+	 * After reading the file's contents it instantiates all the Tile objects in the 2d array of Tiles maze.
+	 * 
+	 */
 
 	public void generateMaze() throws FileNotFoundException {
 		File file = new File("maze.txt");
@@ -57,17 +64,19 @@ public class Model {
 			lineCount++;
 		}
 		scan.close();
+		//calculates all the heuristics of all tiles before A* starts
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
 				maze[i][j].caclculateHeuristic(maze[goal[0]][goal[1]]);
 			}
 		}
 	}
-
+	// returns the maze. The main function of this is so that view/controller is able to see the state of the maze.
 	public Tile[][] getTile() {
 		return maze;
 	}
 
+	// this function is mainly called by generate maze, depending on what character is passed in it returns the value of that type of character
 	public int checkCharType(char c) {
 		if (c == '#') {
 			return Tile.WALL;
@@ -82,15 +91,10 @@ public class Model {
 
 	}
 
-	public void printMaze() {
-		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j++) {
-				System.out.print(maze[i][j].getHeuristic() + " ");
-			}
-			System.out.print("\n");
-		}
-	}
-
+	/*
+	 * This function checks whether the inputted coordinate are valid for the size of maze we have.
+	 * It also checks whether the Tile at the coordinate inputted is a wall or not.
+	 */
 	public boolean isValidCoordinate(int row, int col) {
 
 		if (row < 0 || row >= size || col >= size || col < 0) {
@@ -106,6 +110,11 @@ public class Model {
 		return this.frontier;
 	}
 
+	/*
+	 * This function performs one iteration of the A* algorithm
+	 * where it pops the smallest value in the priority queue and adds into the frontier
+	 * all adjacent valid Tiles.
+	 */
 	public Tile Astar() {
 		if (first) {
 			maze[start[0]][start[1]].setParent(null);
@@ -125,10 +134,12 @@ public class Model {
 			return temp;
 		}
 		temp.setStatus(Tile.EXPLORED);
+		//loads into the frontier all of the adjacent tiles of the latest explored tile
 		for (int i = -1; i <= 1; i++) {
 			for (int j = -1; j <= 1; j++) {
 				if ((i != 0 && j == 0) || (i == 0 && j != 0)) {
 					if (isValidCoordinate(tempCoord[0] + i, tempCoord[1] + j)) {
+						// if an adjacent tile is unexplored add it to the frontier and set all of its values
 						if (maze[tempCoord[0] + i][tempCoord[1] + j].getStatus() == Tile.UNEXPLORED) {
 							maze[tempCoord[0] + i][tempCoord[1] + j].setParent(temp);
 							maze[tempCoord[0] + i][tempCoord[1] + j].setStatus(Tile.FRONTIER);
@@ -137,8 +148,11 @@ public class Model {
 									.setPriority(maze[tempCoord[0] + i][tempCoord[1] + j].getCost()
 											+ maze[tempCoord[0] + i][tempCoord[1] + j].getHeuristic());
 							frontier.add(maze[tempCoord[0] + i][tempCoord[1] + j]);
-						} else if (maze[tempCoord[0] + i][tempCoord[1] + j].getStatus() == Tile.FRONTIER) {
+						}
+						//if an adjacent tile is already frontiered but we found a shorter way to it replace the current value of tile 
+						else if (maze[tempCoord[0] + i][tempCoord[1] + j].getStatus() == Tile.FRONTIER) {
 							if (maze[tempCoord[0] + i][tempCoord[1] + j].getCost() > temp.getCost() + 1) {
+								//we need to pop and push the tile back in since the priority doesnt update if we only update the values in tile
 								frontier.remove(maze[tempCoord[0] + i][tempCoord[1] + j]);
 								maze[tempCoord[0] + i][tempCoord[1] + j].setParent(temp);
 								maze[tempCoord[0] + i][tempCoord[1] + j].setCost(temp.getCost() + 1);
@@ -168,18 +182,4 @@ public class Model {
 		return this.count;
 	}
 
-	/*
-	 * public static void main(String args[]) throws FileNotFoundException {
-	 * Model model = new Model();
-	 * model.printMaze();
-	 * Tile goal = null;
-	 * do {
-	 * goal = model.Astar();
-	 * } while (goal == null && !model.getFrontier().isEmpty());
-	 * 
-	 * while (goal.getParent() != null) {
-	 * System.out.println(goal.getCoordinate()[0] + " " + goal.getCoordinate()[1]);
-	 * }
-	 * }
-	 */
 }

@@ -1,5 +1,6 @@
 
 public class Tile implements Comparable<Tile> {
+	//these public static finals effectively work somewhat like enums
 
 	public static final int WALL = 0;
 	public static final int FREE = 1;
@@ -25,7 +26,9 @@ public class Tile implements Comparable<Tile> {
 		this.coordinate[1] = col;
 		this.heuristic = Integer.MAX_VALUE;
 	}
-
+	/*
+	 * calculate the heuristic of the tile that called this method.
+	 */
 	public void caclculateHeuristic(Tile goalTile) {
 		this.heuristic = Math.abs(this.coordinate[0] - goalTile.coordinate[0])
 				+ Math.abs(this.coordinate[1] - goalTile.coordinate[1]);
@@ -38,6 +41,9 @@ public class Tile implements Comparable<Tile> {
 		return false;
 	}
 
+	/*
+	 * all remaining methods are just setters and getters
+	 */
 	public int getStatus() {
 		return status;
 	}
